@@ -51,8 +51,8 @@ def handle_logging(client, userdata, level, buf):
  print(level, buf)
 
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' # set the option
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kvtitbbeigjxvy:a1d1fc5ca65f29d7800334efa25c31373f1c4387f818898f668eb801a0316fa4@ec2-52-4-153-146.compute-1.amazonaws.com:5432/d4lo58sj89oect' # set the option
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' # set the option
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kvtitbbeigjxvy:a1d1fc5ca65f29d7800334efa25c31373f1c4387f818898f668eb801a0316fa4@ec2-52-4-153-146.compute-1.amazonaws.com:5432/d4lo58sj89oect' # set the option
 app.config['SECRET_KEY'] = '123'
 db.init_app(app)
 login_manager = LoginManager()
