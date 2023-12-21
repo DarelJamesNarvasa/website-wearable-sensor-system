@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wearable Sensor System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      background-image: url('static/pexels-ahmed-akacha-15804044.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    #message_list li {
+      margin-bottom: 15px;
+    }
+
+    .new-message {
+      font-weight: bold;
+    }
+  </style>
+  <script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('connect', function () {
+      socket.emit('subscribe', JSON.stringify({ 'topic': 'wearable/device' }));
+    });
+
+    socket.on('mqtt_message', function (data) {
+      var messageList = $('#message_list');
+      var jsonMessage = JSON.parse(data.payload);
+
+      var latitude = parseFloat(jsonMessage.latitude);
+      var longitude = parseFloat(jsonMessage.longitude);
+      var bpm = jsonMessage.bpm;
+      var temperature = parseFloat(jsonMessage.temperature);
+
+      // Create a new <li> element with the entire message
+      var listItem = $('<li><b>Victim Status:</b> <br><b>Latitude:</b> ' + latitude + '<br><b>Longitude:</b> ' + longitude + '<br><b>BPM:</b> ' + bpm + '<br><b>Temperature:</b> ' + temperature + '</li>');
+
+      // Add the 'new-message' class to the entire <li> element
+      listItem.addClass('new-message');
+
+      messageList.prepend(listItem);
+
+      // Remove the 'new-message' class from previous messages
+      $('#message_list li:not(:first-child)').removeClass('new-message');
+    });
+  </script>
+</head>
+<body>
+  <div class="container mt-4" style="height: 95vh;">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="margin-bottom: 15px">
+      <h1>Dashboard</h1>
+      <a class="btn btn-primary mt-2" href="{{url_for('logout')}}">Press here to logout</a>
+    </div>
+    <div id="mqtt_messages" class="mt-4">
+        <h3>Messages:</h3>
+      <ul id="message_list" class="list-group"></ul>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
